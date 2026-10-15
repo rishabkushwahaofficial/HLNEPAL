@@ -755,7 +755,7 @@
                     type="file" 
                     id="form-image-file" 
                     accept="image/png, image/jpeg, image/webp" 
-                    onchange="admin.initRealtimeCatalog(this)"
+                    onchange="admin.handleImageFileSelect(this)"
                     class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-100 file:text-brand-800 hover:file:bg-brand-200 cursor-pointer"
                   >
                 </div>
@@ -1007,7 +1007,7 @@
     let catalog = [];
 
     // Real-Time Firebase Listener
-    function function initRealtimeCatalog() {       // 1. Agar catalog empty hai to turant default seeds load karo (Screen par turant show hoga)       if (!catalog || catalog.length === 0) {         catalog = [...defaultCatalogSeeds];         app.renderCatalog();       }        // 2. Local Cache check       try {         const cached = localStorage.getItem('hl_catalog_cache');         if (cached) {           const parsed = JSON.parse(cached);           if (Array.isArray(parsed) && parsed.length > 0) {             catalog = parsed;             app.renderCatalog();           }         }       } catch (e) {}        // 3. Realtime Listener       productsRef.on('value', (snapshot) => {         const val = snapshot.val();         if (val) {           const freshCatalog = Object.keys(val).map(key => ({             ...val[key],             firebaseKey: key           }));            catalog = freshCatalog;           try {             localStorage.setItem('hl_catalog_cache', JSON.stringify(catalog));           } catch (e) {}           app.renderCatalog();         } else {           // Database khali ho to fresh default products upload karein           defaultCatalogSeeds.forEach(item => productsRef.push(item));         }          if (document.getElementById('admin-dashboard-box') && !document.getElementById('admin-dashboard-box').classList.contains('hidden')) {           admin.renderProducts();         }       }, (error) => {         console.error("Firebase read error:", error);       });     } {
+    function initRealtimeCatalog() {
       productsRef.on('value', (snapshot) => {
         const val = snapshot.val();
         if (val) {
@@ -1239,7 +1239,7 @@
       }
 
       init() {
-        function initRealtimeCatalog() {       // 1. Agar catalog empty hai to turant default seeds load karo (Screen par turant show hoga)       if (!catalog || catalog.length === 0) {         catalog = [...defaultCatalogSeeds];         app.renderCatalog();       }        // 2. Local Cache check       try {         const cached = localStorage.getItem('hl_catalog_cache');         if (cached) {           const parsed = JSON.parse(cached);           if (Array.isArray(parsed) && parsed.length > 0) {             catalog = parsed;             app.renderCatalog();           }         }       } catch (e) {}        // 3. Realtime Listener       productsRef.on('value', (snapshot) => {         const val = snapshot.val();         if (val) {           const freshCatalog = Object.keys(val).map(key => ({             ...val[key],             firebaseKey: key           }));            catalog = freshCatalog;           try {             localStorage.setItem('hl_catalog_cache', JSON.stringify(catalog));           } catch (e) {}           app.renderCatalog();         } else {           // Database khali ho to fresh default products upload karein           defaultCatalogSeeds.forEach(item => productsRef.push(item));         }          if (document.getElementById('admin-dashboard-box') && !document.getElementById('admin-dashboard-box').classList.contains('hidden')) {           admin.renderProducts();         }       }, (error) => {         console.error("Firebase read error:", error);       });     };
+        initRealtimeCatalog();
         cart.updateBadge(false);
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
@@ -1381,11 +1381,11 @@
             <div>
               <div class="relative bg-brand-50/40 rounded-xl sm:rounded-2xl overflow-hidden aspect-square mb-3 flex items-center justify-center cursor-pointer" onclick="app.openDetailModal('${item.id || item.firebaseKey}')">
                 <img 
-  src="${item.image}" 
-  alt="${item.title}" 
-  loading="lazy" 
-  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
->
+                  src="${item.image}" 
+                  alt="${item.title}" 
+                  loading="lazy" 
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                >
                 ${item.badge ? `
                   <span class="absolute top-2.5 left-2.5 bg-brand-700 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
                     ${item.badge}
@@ -1752,7 +1752,7 @@
         document.getElementById('admin-product-form-modal').classList.add('hidden');
       }
 
-      initRealtimeCatalog(input) {
+      handleImageFileSelect(input) {
         const file = input.files && input.files[0];
         if (!file) return;
 
