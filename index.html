@@ -755,7 +755,7 @@
                     type="file" 
                     id="form-image-file" 
                     accept="image/png, image/jpeg, image/webp" 
-                    onchange="admin.handleImageFileSelect(this)"
+                    onchange="admin.initRealtimeCatalog(this)"
                     class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-100 file:text-brand-800 hover:file:bg-brand-200 cursor-pointer"
                   >
                 </div>
@@ -1752,7 +1752,7 @@
         document.getElementById('admin-product-form-modal').classList.add('hidden');
       }
 
-      handleImageFileSelect(input) {
+      initRealtimeCatalog(input) {
         const file = input.files && input.files[0];
         if (!file) return;
 
