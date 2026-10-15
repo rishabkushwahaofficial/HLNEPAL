@@ -1007,7 +1007,7 @@
     let catalog = [];
 
     // Real-Time Firebase Listener
-    // Instant Display Engine: Bina kisi product change ke instant load     function initRealtimeCatalog() {       // 1. Local Cache: Device storage se turant products screen par dikhana       try {         const cachedData = localStorage.getItem('hl_catalog_cache');         if (cachedData) {           const parsed = JSON.parse(cachedData);           if (Array.isArray(parsed) && parsed.length > 0) {             catalog = parsed;             app.renderCatalog();           }         }       } catch (err) {}        // 2. Firebase Silent Sync: Background me realtime update       productsRef.on('value', (snapshot) => {         const val = snapshot.val();         if (val) {           catalog = Object.keys(val).map(key => ({             ...val[key],             firebaseKey: key           }));                      try {             localStorage.setItem('hl_catalog_cache', JSON.stringify(catalog));           } catch (e) {}            app.renderCatalog();            if (document.getElementById('admin-dashboard-box') && !document.getElementById('admin-dashboard-box').classList.contains('hidden')) {             admin.renderProducts();           }         }       }, (error) => {         console.error("Firebase sync error:", error);       });     }() {
+    function initRealtimeCatalog() {
       productsRef.on('value', (snapshot) => {
         const val = snapshot.val();
         if (val) {
