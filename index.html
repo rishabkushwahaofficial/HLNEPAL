@@ -1007,7 +1007,7 @@
     let catalog = [];
 
     // Real-Time Firebase Listener
-    function initRealtimeCatalog() {
+    function function initRealtimeCatalog() {       // 1. Agar catalog empty hai to turant default seeds load karo (Screen par turant show hoga)       if (!catalog || catalog.length === 0) {         catalog = [...defaultCatalogSeeds];         app.renderCatalog();       }        // 2. Local Cache check       try {         const cached = localStorage.getItem('hl_catalog_cache');         if (cached) {           const parsed = JSON.parse(cached);           if (Array.isArray(parsed) && parsed.length > 0) {             catalog = parsed;             app.renderCatalog();           }         }       } catch (e) {}        // 3. Realtime Listener       productsRef.on('value', (snapshot) => {         const val = snapshot.val();         if (val) {           const freshCatalog = Object.keys(val).map(key => ({             ...val[key],             firebaseKey: key           }));            catalog = freshCatalog;           try {             localStorage.setItem('hl_catalog_cache', JSON.stringify(catalog));           } catch (e) {}           app.renderCatalog();         } else {           // Database khali ho to fresh default products upload karein           defaultCatalogSeeds.forEach(item => productsRef.push(item));         }          if (document.getElementById('admin-dashboard-box') && !document.getElementById('admin-dashboard-box').classList.contains('hidden')) {           admin.renderProducts();         }       }, (error) => {         console.error("Firebase read error:", error);       });     } {
       productsRef.on('value', (snapshot) => {
         const val = snapshot.val();
         if (val) {
@@ -1239,7 +1239,7 @@
       }
 
       init() {
-        initRealtimeCatalog();
+        function initRealtimeCatalog() {       // 1. Agar catalog empty hai to turant default seeds load karo (Screen par turant show hoga)       if (!catalog || catalog.length === 0) {         catalog = [...defaultCatalogSeeds];         app.renderCatalog();       }        // 2. Local Cache check       try {         const cached = localStorage.getItem('hl_catalog_cache');         if (cached) {           const parsed = JSON.parse(cached);           if (Array.isArray(parsed) && parsed.length > 0) {             catalog = parsed;             app.renderCatalog();           }         }       } catch (e) {}        // 3. Realtime Listener       productsRef.on('value', (snapshot) => {         const val = snapshot.val();         if (val) {           const freshCatalog = Object.keys(val).map(key => ({             ...val[key],             firebaseKey: key           }));            catalog = freshCatalog;           try {             localStorage.setItem('hl_catalog_cache', JSON.stringify(catalog));           } catch (e) {}           app.renderCatalog();         } else {           // Database khali ho to fresh default products upload karein           defaultCatalogSeeds.forEach(item => productsRef.push(item));         }          if (document.getElementById('admin-dashboard-box') && !document.getElementById('admin-dashboard-box').classList.contains('hidden')) {           admin.renderProducts();         }       }, (error) => {         console.error("Firebase read error:", error);       });     };
         cart.updateBadge(false);
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
