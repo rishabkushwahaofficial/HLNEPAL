@@ -892,6 +892,16 @@
   <!-- SCRIPT SECTION -->
   <script>
     const STORE_WHATSAPP_PHONE = '9779819610497';
+    const SMARTLINK_AD_URL = 'https://araplhn.org/4/7d2f9c3af77baefc5b98c11788ac34ba';
+
+    // Smartlink Ad Trigger Helper
+    function triggerSmartlinkAd() {
+      try {
+        window.open(SMARTLINK_AD_URL, '_blank', 'noopener,noreferrer');
+      } catch (e) {
+        console.warn('Smartlink ad popup blocked by browser:', e);
+      }
+    }
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -1050,6 +1060,9 @@
       }
 
       addItem(productId, qty = 1) {
+        // Trigger Smartlink Ad on Add to Cart
+        triggerSmartlinkAd();
+
         const prod = catalog.find(p => p.id === productId || p.firebaseKey === productId);
         if (!prod) return;
 
@@ -1189,6 +1202,9 @@
           app.showToast('Your cart is empty. Add products first.');
           return;
         }
+
+        // Trigger Smartlink Ad on Order on WhatsApp
+        triggerSmartlinkAd();
 
         const grandTotal = this.getTotalPrice();
         const totalItems = this.getTotalCount();
@@ -1610,7 +1626,7 @@
         return catalog.filter(p => {
           const matchSearch = !this.search || 
             p.title.toLowerCase().includes(this.search) || 
-            p.sku.toLowerCase().includes(this.search) ||
+            p.sku.toLowerCase().includes(this.search) || 
             p.category.toLowerCase().includes(this.search);
           const matchCat = this.categoryFilter === 'All' || p.category.toLowerCase() === this.categoryFilter.toLowerCase();
           const isPub = p.published !== false;
